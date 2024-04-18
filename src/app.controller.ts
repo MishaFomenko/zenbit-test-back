@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Delete, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 import { PostFeedbackDto } from './dto/postFeedbackDto';
 
@@ -7,9 +7,19 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Post()
-  postFeedback(@Body() postFeedbackDto: PostFeedbackDto): string {
-    // return this.appService.postFeedback(postFeedbackDto);
-    console.log(this.appService.postFeedback(postFeedbackDto));
-    return JSON.stringify('back successfully triggered');
+  postFeedback(
+    @Body() postFeedbackDto: PostFeedbackDto,
+  ): Promise<PostFeedbackDto> {
+    return this.appService.postFeedback(postFeedbackDto);
+  }
+
+  @Get()
+  getAllFeedbacks(): Promise<PostFeedbackDto[]> {
+    return this.appService.getAllFeedbacks();
+  }
+
+  @Delete(':id')
+  deleteFeedback(@Param('id') id: string): Promise<PostFeedbackDto> {
+    return this.appService.deleteFeedback(id);
   }
 }
